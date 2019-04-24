@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
 
   _showErrorHud(BuildContext context) {
     ProgressHud.of(context).showAndDismiss(ProgressHudType.error, "load fail");
-  } 
+  }
 
   _showProgressHud(BuildContext context) {
     var hud = ProgressHud.of(context);
@@ -95,7 +95,7 @@ class MyApp extends StatelessWidget {
 
 ## Showcase
 
-![]()
+![demo演示](https://github.com/zhengbomo/bmprogresshud/blob/master/images/demo.gif?raw=true)
 
 ## Getting Started
 
