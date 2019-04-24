@@ -2,6 +2,10 @@
 
 A lightweight progress HUD for your Flutter app
 
+## Showcase
+
+![demo演示](https://github.com/zhengbomo/bmprogresshud/blob/master/images/demo.gif?raw=true)
+
 ## Example
 
 place ProgressHud to you container
@@ -92,10 +96,6 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-
-## Showcase
-
-![demo演示](https://github.com/zhengbomo/bmprogresshud/blob/master/images/demo.gif?raw=true)
 
 ## Getting Started
 

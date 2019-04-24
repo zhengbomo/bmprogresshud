@@ -1,4 +1,4 @@
-name: bmprogresshud_example
+name: example
 description: Demonstrates how to use the bmprogresshud plugin.
 publish_to: 'none'
 
@@ -19,6 +19,7 @@ dev_dependencies:
 
   bmprogresshud:
     path: ../
+  test: ^1.5.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
