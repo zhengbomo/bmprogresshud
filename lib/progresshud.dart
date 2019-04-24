@@ -68,7 +68,7 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
 
   /// show hud with type and text
   void show(ProgressHudType type, String text) {
-    _animation.forward(from: 0);
+    _animation.forward();
     setState(() {
       _isVisible = true;
       _text = text;

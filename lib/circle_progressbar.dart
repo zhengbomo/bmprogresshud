@@ -16,7 +16,6 @@ class CircleProgressBarPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    print(DateTime.now());
     final paint = new Paint()
       ..color = this.color
       ..style = PaintingStyle.stroke
