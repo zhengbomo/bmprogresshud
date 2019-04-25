@@ -1,6 +1,10 @@
 # bmprogresshud
 
-A lightweight progress HUD for your Flutter app
+<a href="https://github.com/Solido/awesome-flutter">
+   <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
+</a>
+
+A lightweight progress HUD for your Flutter app, Inspired by [SVProgressHUD](https://github.com/SVProgressHUD/SVProgressHUD).
 
 ## Showcase
 
@@ -8,7 +12,7 @@ A lightweight progress HUD for your Flutter app
 
 ## Example
 
-place ProgressHud to you container
+place ProgressHud to you container, and get with `ProgressHud.of(context)`
 
 ```dart
 import 'dart:async';
@@ -38,24 +42,6 @@ class MyApp extends StatelessWidget {
                     },
                     child: Text("show loading"),
                   ),
-                  RaisedButton(
-                    onPressed: () {
-                      _showSuccessHud(context);
-                    },
-                    child: Text("show success"),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      _showErrorHud(context);
-                    },
-                    child: Text("show error"),
-                  ),
-                  RaisedButton(
-                    onPressed: () {
-                      _showProgressHud(context);
-                    },
-                    child: Text("show progress"),
-                  ),
                 ],
               );
             }),
@@ -70,30 +56,38 @@ class MyApp extends StatelessWidget {
     await Future.delayed(const Duration(seconds: 1));
     ProgressHud.of(context).dismiss();
   }
+}
+```
 
-  _showSuccessHud(BuildContext context) {
-    ProgressHud.of(context).showAndDismiss(ProgressHudType.success, "load success");
-  }
+other ProgressHudType
 
-  _showErrorHud(BuildContext context) {
-    ProgressHud.of(context).showAndDismiss(ProgressHudType.error, "load fail");
-  }
+```dart
+// show successHud with text
+_showSuccessHud(BuildContext context) {
+  ProgressHud.of(context).showAndDismiss(ProgressHudType.success, "load success");
+}
 
-  _showProgressHud(BuildContext context) {
-    var hud = ProgressHud.of(context);
-    hud.show(ProgressHudType.progress, "loading");
+// show errorHud with text
+_showErrorHud(BuildContext context) {
+  ProgressHud.of(context).showAndDismiss(ProgressHudType.error, "load fail");
+}
 
-    double current = 0;
-    Timer.periodic(Duration(milliseconds: 1000.0 ~/ 60), (timer) {
-      current += 1;
-      var progress = current / 100;
-      hud.updateProgress(progress, "loading $current%");
-      if (progress == 1) {
-        hud.showAndDismiss(ProgressHudType.success, "load success");
-        timer.cancel();
-      }
-    });
-  }
+// show progressHud with progress and text
+_showProgressHud(BuildContext context) {
+  var hud = ProgressHud.of(context);
+  hud.show(ProgressHudType.progress, "loading");
+
+  double current = 0;
+  Timer.periodic(Duration(milliseconds: 1000.0 ~/ 60), (timer) {
+    current += 1;
+    var progress = current / 100;
+    hud.updateProgress(progress, "loading $current%");
+    if (progress == 1) {
+      // finished
+      hud.showAndDismiss(ProgressHudType.success, "load success");
+      timer.cancel();
+    }
+  });
 }
 ```
 
