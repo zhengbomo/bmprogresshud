@@ -3,6 +3,7 @@
 <a href="https://github.com/Solido/awesome-flutter">
    <img alt="Awesome Flutter" src="https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square" />
 </a>
+
 [![pub package](https://img.shields.io/pub/v/bmprogresshud.svg)](https://pub.dartlang.org/packages/bmprogresshud)
 
 A lightweight progress HUD for your Flutter app, Inspired by [SVProgressHUD](https://github.com/SVProgressHUD/SVProgressHUD).
