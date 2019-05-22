@@ -76,6 +76,11 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
     });
   }
 
+  /// show loading with text
+  void showLoading({String text = "loading"}) {
+    this.show(ProgressHudType.loading, text);
+  }
+
   /// update progress value and text when ProgressHudType = progress
   /// 
   /// should call `show(ProgressHudType.progress, "Loading")` before use
@@ -87,7 +92,7 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
   }
 
   /// show hud and dismiss automatically
-  void showAndDismiss(ProgressHudType type, String text) async {
+  Future showAndDismiss(ProgressHudType type, String text) async {
     show(type, text);
     var millisecond = max(500 + text.length * 200, 1000);
     var duration = Duration(milliseconds: millisecond);
