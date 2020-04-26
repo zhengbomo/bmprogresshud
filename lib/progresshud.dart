@@ -61,24 +61,43 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
     super.initState();
   }
 
+  @override
+  void dispose() {
+    _animation.dispose();
+    _animation = null;
+    super.dispose();
+  }
+
   /// dismiss hud
   void dismiss() {
-    _animation.reverse();
+    _animation?.reverse();
   }
 
   /// show hud with type and text
   void show(ProgressHudType type, String text) {
-    _animation.forward();
-    setState(() {
-      _isVisible = true;
-      _text = text;
-      _progressType = type;
-    });
+    if (_animation != null) {
+      _animation.forward();
+      setState(() {
+        _isVisible = true;
+        _text = text;
+        _progressType = type;
+      });
+    }    
   }
 
   /// show loading with text
   void showLoading({String text = "loading"}) {
     this.show(ProgressHudType.loading, text);
+  }
+
+  /// show success icon with text and dismiss automatic
+  Future showSuccessAndDismiss({String text}) async {
+    await this.showAndDismiss(ProgressHudType.success, text);
+  }
+  
+  /// show error icon with text and dismiss automatic
+  Future showErrorAndDismiss({String text}) async {
+    await this.showAndDismiss(ProgressHudType.error, text);
   }
 
   /// update progress value and text when ProgressHudType = progress
@@ -123,7 +142,10 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
         var sizeBox = SizedBox(
           width: kIconSize, 
           height: kIconSize, 
-          child: CupertinoActivityIndicator(animating: true, radius: 15)
+          child: CupertinoTheme(
+            data: CupertinoTheme.of(context).copyWith(brightness: Brightness.dark),
+            child: CupertinoActivityIndicator(animating: true, radius: 15)
+          ),          
         );
         return _createHudView(sizeBox);
       case ProgressHudType.error:
