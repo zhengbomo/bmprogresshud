@@ -1,3 +1,7 @@
+## 0.0.7
+
+* add maximumDismissDuration property
+
 ## 0.0.6
 
 * fix dark mode show for CupertinoActivityIndicator

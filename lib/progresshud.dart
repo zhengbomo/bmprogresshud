@@ -20,12 +20,14 @@ class ProgressHud extends StatefulWidget {
   /// the offsetY of hudview postion from center, default is -50
   final double offsetY;
   final Widget child;
+  // max duration for auto dismiss hud
+  final Duration maximumDismissDuration;
   
   static ProgressHudState of(BuildContext context) {
     return context.ancestorStateOfType(const TypeMatcher<ProgressHudState>());
   }
   
-  ProgressHud({ @required this.child, this.offsetY = -50, Key key })
+  ProgressHud({ @required this.child, this.offsetY = -50, this.maximumDismissDuration = null, Key key })
     : super(key: key);
 
   @override
@@ -115,6 +117,9 @@ class ProgressHudState extends State<ProgressHud> with SingleTickerProviderState
     show(type, text);
     var millisecond = max(500 + text.length * 200, 1000);
     var duration = Duration(milliseconds: millisecond);
+    if (widget.maximumDismissDuration != null && widget.maximumDismissDuration.inMilliseconds < duration.inMilliseconds) {
+      duration = widget.maximumDismissDuration;
+    }
     await Future.delayed(duration);
     dismiss();
   }

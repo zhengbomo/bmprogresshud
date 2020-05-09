@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
           title: Text("hud demo"),
         ),
         body: ProgressHud(
+          maximumDismissDuration: Duration(seconds: 2),
           child: Center(
             child: Builder(builder: (context) {
               return Column(
