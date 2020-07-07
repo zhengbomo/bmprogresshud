@@ -1,3 +1,7 @@
+## 0.0.8
+
+* Optimize performance
+
 ## 0.0.7
 
 * add maximumDismissDuration property
