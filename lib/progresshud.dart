@@ -23,18 +23,18 @@ class ProgressHud extends StatefulWidget {
   final double offsetY;
   final Widget child;
   // max duration for auto dismiss hud
-  final Duration maximumDismissDuration;
+  final Duration? maximumDismissDuration;
 
   static ProgressHudState of(BuildContext context) {
-    return context.ancestorStateOfType(const TypeMatcher<ProgressHudState>());
+    return context.findAncestorStateOfType<ProgressHudState>()!;
   }
 
-  ProgressHud(
-      {@required this.child,
-      this.offsetY = -50,
-      this.maximumDismissDuration = null,
-      Key key})
-      : super(key: key);
+  ProgressHud({
+    Key? key,
+    required this.child,
+    this.offsetY = -50,
+    this.maximumDismissDuration
+  }) : super(key: key);
 
   @override
   ProgressHudState createState() => ProgressHudState();
@@ -42,7 +42,7 @@ class ProgressHud extends StatefulWidget {
 
 class ProgressHudState extends State<ProgressHud> {
   var _isVisible = false;
-  var _text = "";
+  String _text = "";
   double _opacity = 0.0;
   var _progressType = ProgressHudType.loading;
   var _progressValue = 0.0;
@@ -70,12 +70,12 @@ class ProgressHudState extends State<ProgressHud> {
   }
 
   /// show success icon with text and dismiss automatic
-  Future showSuccessAndDismiss({String text}) async {
+  Future showSuccessAndDismiss({required String text}) async {
     await this.showAndDismiss(ProgressHudType.success, text);
   }
 
   /// show error icon with text and dismiss automatic
-  Future showErrorAndDismiss({String text}) async {
+  Future showErrorAndDismiss({required String text}) async {
     await this.showAndDismiss(ProgressHudType.error, text);
   }
 
@@ -95,9 +95,9 @@ class ProgressHudState extends State<ProgressHud> {
     var millisecond = max(500 + text.length * 200, 1000);
     var duration = Duration(milliseconds: millisecond);
     if (widget.maximumDismissDuration != null &&
-        widget.maximumDismissDuration.inMilliseconds <
+        widget.maximumDismissDuration!.inMilliseconds <
             duration.inMilliseconds) {
-      duration = widget.maximumDismissDuration;
+      duration = widget.maximumDismissDuration!;
     }
     await Future.delayed(duration);
     dismiss();

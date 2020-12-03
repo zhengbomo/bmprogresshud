@@ -1,3 +1,7 @@
+## 0.0.8-nullsafety.1
+
+* null safety
+
 ## 0.0.8
 
 * Optimize performance
