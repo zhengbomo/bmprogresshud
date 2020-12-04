@@ -23,10 +23,10 @@ class ProgressHud extends StatefulWidget {
   final double offsetY;
   final Widget child;
   // max duration for auto dismiss hud
-  final Duration? maximumDismissDuration;
+  final Duration maximumDismissDuration;
 
   static ProgressHudState of(BuildContext context) {
-    return context.findAncestorStateOfType<ProgressHudState>()!;
+    return context.findAncestorStateOfType<ProgressHudState>();
   }
 
   ProgressHud({
@@ -70,12 +70,12 @@ class ProgressHudState extends State<ProgressHud> {
   }
 
   /// show success icon with text and dismiss automatic
-  Future showSuccessAndDismiss({required String text}) async {
+  Future showSuccessAndDismiss({String text}) async {
     await this.showAndDismiss(ProgressHudType.success, text);
   }
 
   /// show error icon with text and dismiss automatic
-  Future showErrorAndDismiss({required String text}) async {
+  Future showErrorAndDismiss({String text}) async {
     await this.showAndDismiss(ProgressHudType.error, text);
   }
 
@@ -95,9 +95,9 @@ class ProgressHudState extends State<ProgressHud> {
     var millisecond = max(500 + text.length * 200, 1000);
     var duration = Duration(milliseconds: millisecond);
     if (widget.maximumDismissDuration != null &&
-        widget.maximumDismissDuration!.inMilliseconds <
+        widget.maximumDismissDuration.inMilliseconds <
             duration.inMilliseconds) {
-      duration = widget.maximumDismissDuration!;
+      duration = widget.maximumDismissDuration;
     }
     await Future.delayed(duration);
     dismiss();

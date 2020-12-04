@@ -1,6 +1,6 @@
-## 0.0.8-nullsafety.1
+## 0.0.9
 
-* null safety
+* change deprecated method
 
 ## 0.0.8
 
