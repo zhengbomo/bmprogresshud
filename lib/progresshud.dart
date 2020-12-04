@@ -29,12 +29,12 @@ class ProgressHud extends StatefulWidget {
     return context.findAncestorStateOfType<ProgressHudState>();
   }
 
-  ProgressHud({
-    Key? key,
-    required this.child,
-    this.offsetY = -50,
-    this.maximumDismissDuration
-  }) : super(key: key);
+  ProgressHud(
+      {Key key,
+      @required this.child,
+      this.offsetY = -50,
+      this.maximumDismissDuration})
+      : super(key: key);
 
   @override
   ProgressHudState createState() => ProgressHudState();
