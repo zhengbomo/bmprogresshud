@@ -10,41 +10,35 @@ A lightweight progress HUD for your Flutter app, Inspired by [SVProgressHUD](htt
 
 ## Example
 
+### local HUD
+
 place ProgressHud to you container, and get with `ProgressHud.of(context)`
 
 ```dart
-import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:bmprogresshud/bmprogresshud.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("hud demo"),
-        ),
-        body: ProgressHud(
-          maximumDismissDuration: Duration(seconds: 2),
-          child: Center(
-            child: Builder(builder: (context) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                    onPressed: () {
-                      _showLoadingHud(context);
-                    },
-                    child: Text("show loading"),
-                  ),
-                ],
-              );
-            }),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("hud demo"),
+      ),
+      body: ProgressHud(
+        maximumDismissDuration: Duration(seconds: 2),
+        child: Center(
+          child: Builder(builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    _showLoadingHud(context);
+                  },
+                  child: Text("show loading"),
+                ),
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -54,6 +48,55 @@ class MyApp extends StatelessWidget {
     ProgressHud.of(context).show(ProgressHudType.loading, "loading...");
     await Future.delayed(const Duration(seconds: 1));
     ProgressHud.of(context).dismiss();
+  }
+}
+```
+
+you can also use `GlobalKey` to access ProgressHudState
+
+```dart
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  GlobalKey<ProgressHudState> _globalKey = GlobalKey();
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("hud demo"),
+      ),
+      body: ProgressHud(
+        key: _globalKey,
+        maximumDismissDuration: Duration(seconds: 2),
+        child: Center(
+          child: Builder(builder: (context) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    _showLoadingHud(context);
+                  },
+                  child: Text("show loading"),
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+
+  _showLoadingHud(BuildContext context) async {
+    _globalKey.currentState?.show(ProgressHudType.loading, "loading...");
+    await Future.delayed(const Duration(seconds: 1));
+    _globalKey.currentState?.dismiss();
   }
 }
 ```
@@ -87,6 +130,42 @@ _showProgressHud(BuildContext context) {
       timer.cancel();
     }
   });
+}
+```
+
+### global HUD
+
+1. mark global hud with `isGlobalHud`, there must be **only one** global hud, it always define before MeterialApp
+
+```dart
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ProgressHud(
+      // mark hud as global, it should be only one global hud
+      isGlobalHud: true,
+      child: MaterialApp(
+        home: HomePage()
+      ),
+    );
+  }
+}
+```
+
+2. use global hud with static method, similar to hud instance
+
+```dart
+void example() {
+    ProgressHud.showLoading();
+    ProgressHud.dismiss();
+    
+    ProgressHud.showAndDismiss(ProgressHudType.success, "load success");
+    ProgressHud.showAndDismiss(ProgressHudType.error, "load fail");
+    
+    ProgressHud.show(ProgressHudType.progress, "loading");
+    ProgressHud.updateProgress(progress, "loading 20%");
+    
+    ProgressHud.showAndDismiss(ProgressHudType.success, "load success");
 }
 ```
 

@@ -17,6 +17,9 @@ enum ProgressHudType {
   progress
 }
 
+/// global hud state, only one
+ProgressHudState? _globalHud;
+
 /// show progresshud like ios app
 class ProgressHud extends StatefulWidget {
   /// the offsetY of hudview postion from center, default is -50
@@ -25,43 +28,96 @@ class ProgressHud extends StatefulWidget {
   // max duration for auto dismiss hud
   final Duration? maximumDismissDuration;
 
+  // is must be only one global hud
+  final bool isGlobalHud;
+
   static ProgressHudState of(BuildContext context) {
     return context.findAncestorStateOfType<ProgressHudState>()!;
   }
 
-  ProgressHud({
-    Key? key,
-    required this.child,
-    this.offsetY = -50,
-    this.maximumDismissDuration
-  }) : super(key: key);
+  ProgressHud(
+      {Key? key,
+      required this.child,
+      this.offsetY = -50,
+      this.isGlobalHud = false,
+      this.maximumDismissDuration})
+      : super(key: key);
 
   @override
   ProgressHudState createState() => ProgressHudState();
+
+  /// dismiss hud
+  static void dismiss() {
+    _globalHud?.dismiss();
+  }
+
+  /// show hud with type and text
+  static void show(ProgressHudType type, String text) {
+    _globalHud?.show(type, text);
+  }
+
+  /// show loading with text
+  static void showLoading({String text = "loading"}) {
+    _globalHud?.showLoading(text: text);
+  }
+
+  /// show success icon with text and dismiss automatic
+  static Future showSuccessAndDismiss({required String text}) async {
+    return _globalHud?.showSuccessAndDismiss(text: text);
+  }
+
+  /// show error icon with text and dismiss automatic
+  static Future showErrorAndDismiss({required String text}) async {
+    return _globalHud?.showErrorAndDismiss(text: text);
+  }
+
+  /// update progress value and text when ProgressHudType = progress
+  ///
+  /// should call `show(ProgressHudType.progress, "Loading")` before use
+  static void updateProgress(double progress, String text) {
+    _globalHud?.updateProgress(progress, text);
+  }
+
+  /// show hud and dismiss automatically
+  static Future showAndDismiss(ProgressHudType type, String text) async {
+    return _globalHud?.showAndDismiss(type, text);
+  }
 }
 
 class ProgressHudState extends State<ProgressHud> {
-  var _isVisible = false;
+  bool _isVisible = false;
   String _text = "";
   double _opacity = 0.0;
-  var _progressType = ProgressHudType.loading;
-  var _progressValue = 0.0;
+  double _progressValue = 0.0;
+  ProgressHudType _progressType = ProgressHudType.loading;
+
+  @override
+  void initState() {
+    if (widget.isGlobalHud) {
+      _globalHud = this;
+    }
+    super.initState();
+  }
 
   /// dismiss hud
   void dismiss() {
-    setState(() {
-      _opacity = 0;
-    });
+    if (this.mounted) {
+      setState(() {
+        _opacity = 0;
+      });
+    }
   }
 
   /// show hud with type and text
   void show(ProgressHudType type, String text) {
-    _text = text;
-    _isVisible = true;
-    _progressType = type;
-    setState(() {
-      _opacity = 1;
-    });
+    if (this.mounted) {
+      _text = text;
+      _isVisible = true;
+      _progressType = type;
+      setState(() {
+        _opacity = 1;
+      });
+    }
   }
 
   /// show loading with text
@@ -83,49 +139,53 @@ class ProgressHudState extends State<ProgressHud> {
   ///
   /// should call `show(ProgressHudType.progress, "Loading")` before use
   void updateProgress(double progress, String text) {
-    setState(() {
-      _progressValue = progress;
-      _text = text;
-    });
+    if (this.mounted) {
+      setState(() {
+        _progressValue = progress;
+        _text = text;
+      });
+    }
   }
 
   /// show hud and dismiss automatically
   Future showAndDismiss(ProgressHudType type, String text) async {
-    show(type, text);
-    var millisecond = max(500 + text.length * 200, 1000);
-    var duration = Duration(milliseconds: millisecond);
-    if (widget.maximumDismissDuration != null &&
-        widget.maximumDismissDuration!.inMilliseconds <
-            duration.inMilliseconds) {
-      duration = widget.maximumDismissDuration!;
+    if (this.mounted) {
+      show(type, text);
+      var millisecond = max(500 + text.length * 200, 1000);
+      var duration = Duration(milliseconds: millisecond);
+      if (widget.maximumDismissDuration != null &&
+          widget.maximumDismissDuration!.inMilliseconds <
+              duration.inMilliseconds) {
+        duration = widget.maximumDismissDuration!;
+      }
+      await Future.delayed(duration);
+      dismiss();
     }
-    await Future.delayed(duration);
-    dismiss();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        widget.child,
-        Offstage(
-          offstage: !_isVisible,
-          child: AnimatedOpacity(
-            onEnd: () {
-              if (_opacity == 0 && _isVisible) {
-                // hide
-                setState(() {
-                  _isVisible = false;
-                });
-              }
-            },
-            opacity: _opacity,
-            duration: Duration(milliseconds: 250),
-            child: _createHud(),
-          ),
-        )
-      ],
-    );
+    return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Stack(children: <Widget>[
+          widget.child,
+          Offstage(
+            offstage: !_isVisible,
+            child: AnimatedOpacity(
+              onEnd: () {
+                if (_opacity == 0 && _isVisible) {
+                  // hide
+                  setState(() {
+                    _isVisible = false;
+                  });
+                }
+              },
+              opacity: _opacity,
+              duration: Duration(milliseconds: 250),
+              child: _createHud(),
+            ),
+          )
+        ]));
   }
 
   Widget _createHud() {

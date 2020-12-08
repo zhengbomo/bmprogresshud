@@ -1,6 +1,19 @@
+## 1.0.0-nullsafety.2
+
+* sync 0.0.10
+
+## 0.0.10
+
+* add global hud support
+* fix bug
+
 ## 1.0.0-nullsafety.1
 
 * null safety
+
+## 0.0.9
+
+* change deprecated method
 
 ## 0.0.8
 
