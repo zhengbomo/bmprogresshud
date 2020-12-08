@@ -98,21 +98,26 @@ class ProgressHudState extends State<ProgressHud> {
     }
     super.initState();
   }
+
   /// dismiss hud
   void dismiss() {
-    setState(() {
-      _opacity = 0;
-    });
+    if (this.mounted) {
+      setState(() {
+        _opacity = 0;
+      });
+    }
   }
 
   /// show hud with type and text
   void show(ProgressHudType type, String text) {
-    _text = text;
-    _isVisible = true;
-    _progressType = type;
-    setState(() {
-      _opacity = 1;
-    });
+    if (this.mounted) {
+      _text = text;
+      _isVisible = true;
+      _progressType = type;
+      setState(() {
+        _opacity = 1;
+      });
+    }
   }
 
   /// show loading with text
@@ -134,49 +139,53 @@ class ProgressHudState extends State<ProgressHud> {
   ///
   /// should call `show(ProgressHudType.progress, "Loading")` before use
   void updateProgress(double progress, String text) {
-    setState(() {
-      _progressValue = progress;
-      _text = text;
-    });
+    if (this.mounted) {
+      setState(() {
+        _progressValue = progress;
+        _text = text;
+      });
+    }
   }
 
   /// show hud and dismiss automatically
   Future showAndDismiss(ProgressHudType type, String text) async {
-    show(type, text);
-    var millisecond = max(500 + text.length * 200, 1000);
-    var duration = Duration(milliseconds: millisecond);
-    if (widget.maximumDismissDuration != null &&
-        widget.maximumDismissDuration.inMilliseconds <
-            duration.inMilliseconds) {
-      duration = widget.maximumDismissDuration;
+    if (this.mounted) {
+      show(type, text);
+      var millisecond = max(500 + text.length * 200, 1000);
+      var duration = Duration(milliseconds: millisecond);
+      if (widget.maximumDismissDuration != null &&
+          widget.maximumDismissDuration.inMilliseconds <
+              duration.inMilliseconds) {
+        duration = widget.maximumDismissDuration;
+      }
+      await Future.delayed(duration);
+      dismiss();
     }
-    await Future.delayed(duration);
-    dismiss();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        widget.child,
-        Offstage(
-          offstage: !_isVisible,
-          child: AnimatedOpacity(
-            onEnd: () {
-              if (_opacity == 0 && _isVisible) {
-                // hide
-                setState(() {
-                  _isVisible = false;
-                });
-              }
-            },
-            opacity: _opacity,
-            duration: Duration(milliseconds: 250),
-            child: _createHud(),
-          ),
-        )
-      ],
-    );
+    return Directionality(
+        textDirection: TextDirection.ltr,
+        child: Stack(children: <Widget>[
+          widget.child,
+          Offstage(
+            offstage: !_isVisible,
+            child: AnimatedOpacity(
+              onEnd: () {
+                if (_opacity == 0 && _isVisible) {
+                  // hide
+                  setState(() {
+                    _isVisible = false;
+                  });
+                }
+              },
+              opacity: _opacity,
+              duration: Duration(milliseconds: 250),
+              child: _createHud(),
+            ),
+          )
+        ]));
   }
 
   Widget _createHud() {
