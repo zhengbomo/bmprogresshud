@@ -17,6 +17,9 @@ enum ProgressHudType {
   progress
 }
 
+/// global hud state, only one
+ProgressHudState _globalHud;
+
 /// show progresshud like ios app
 class ProgressHud extends StatefulWidget {
   /// the offsetY of hudview postion from center, default is -50
@@ -24,6 +27,9 @@ class ProgressHud extends StatefulWidget {
   final Widget child;
   // max duration for auto dismiss hud
   final Duration maximumDismissDuration;
+
+  // is must be only one global hud
+  final bool isGlobalHud;
 
   static ProgressHudState of(BuildContext context) {
     return context.findAncestorStateOfType<ProgressHudState>();
@@ -33,20 +39,65 @@ class ProgressHud extends StatefulWidget {
       {Key key,
       @required this.child,
       this.offsetY = -50,
+      this.isGlobalHud = false,
       this.maximumDismissDuration})
       : super(key: key);
 
   @override
   ProgressHudState createState() => ProgressHudState();
+
+  /// dismiss hud
+  static void dismiss() {
+    _globalHud?.dismiss();
+  }
+
+  /// show hud with type and text
+  static void show(ProgressHudType type, String text) {
+    _globalHud?.show(type, text);
+  }
+
+  /// show loading with text
+  static void showLoading({String text = "loading"}) {
+    _globalHud?.showLoading(text: text);
+  }
+
+  /// show success icon with text and dismiss automatic
+  static Future showSuccessAndDismiss({String text}) async {
+    return _globalHud?.showSuccessAndDismiss(text: text);
+  }
+
+  /// show error icon with text and dismiss automatic
+  static Future showErrorAndDismiss({String text}) async {
+    return _globalHud?.showErrorAndDismiss(text: text);
+  }
+
+  /// update progress value and text when ProgressHudType = progress
+  ///
+  /// should call `show(ProgressHudType.progress, "Loading")` before use
+  static void updateProgress(double progress, String text) {
+    _globalHud?.updateProgress(progress, text);
+  }
+
+  /// show hud and dismiss automatically
+  static Future showAndDismiss(ProgressHudType type, String text) async {
+    return _globalHud?.showAndDismiss(type, text);
+  }
 }
 
 class ProgressHudState extends State<ProgressHud> {
-  var _isVisible = false;
+  bool _isVisible = false;
   String _text = "";
   double _opacity = 0.0;
-  var _progressType = ProgressHudType.loading;
-  var _progressValue = 0.0;
+  double _progressValue = 0.0;
+  ProgressHudType _progressType = ProgressHudType.loading;
 
+  @override
+  void initState() {
+    if (widget.isGlobalHud) {
+      _globalHud = this;
+    }
+    super.initState();
+  }
   /// dismiss hud
   void dismiss() {
     setState(() {
