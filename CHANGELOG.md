@@ -1,3 +1,8 @@
+## 0.0.10
+
+* add global hud support
+* fix bug
+
 ## 0.0.9
 
 * change deprecated method
