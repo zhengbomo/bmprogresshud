@@ -1,6 +1,6 @@
 name: bmprogresshud
 description: A new flutter plugin project. like SVProgressHUD in iOS, easy to use
-version: 1.0.0
+version: 0.0.11
 homepage: https://github.com/zhengbomo/bmprogresshud
 
 environment:
