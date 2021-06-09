@@ -39,25 +39,25 @@ class _HomePageState extends State<HomePage> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     _showLoadingHud(context);
                   },
                   child: Text("show loading"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     _showSuccessHud(context);
                   },
                   child: Text("show success"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     _showErrorHud(context);
                   },
                   child: Text("show error"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     _showProgressHud(context);
                   },
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
 
                 Divider(height: 50),
 
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () async {
                     ProgressHud.showLoading();
                     await Future.delayed(const Duration(seconds: 1));
@@ -74,19 +74,19 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Text("show global loading"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     ProgressHud.showAndDismiss(ProgressHudType.success, "load success");
                   },
                   child: Text("show global success"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     ProgressHud.showAndDismiss(ProgressHudType.error, "load fail");
                   },
                   child: Text("show global error"),
                 ),
-                RaisedButton(
+                ElevatedButton(
                   onPressed: () {
                     _showProgressHudGlobal();
                   },

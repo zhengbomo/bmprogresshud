@@ -91,6 +91,8 @@ class ProgressHudState extends State<ProgressHud> {
   double _progressValue = 0.0;
   ProgressHudType _progressType = ProgressHudType.loading;
 
+  bool _hasBuildAfterShow = false;
+
   @override
   void initState() {
     if (widget.isGlobalHud) {
@@ -104,6 +106,9 @@ class ProgressHudState extends State<ProgressHud> {
     if (this.mounted) {
       setState(() {
         _opacity = 0;
+        if (!this._hasBuildAfterShow) {
+          _isVisible = false;
+        }
       });
     }
   }
@@ -117,6 +122,7 @@ class ProgressHudState extends State<ProgressHud> {
       setState(() {
         _opacity = 1;
       });
+      this._hasBuildAfterShow = false;
     }
   }
 
@@ -165,6 +171,7 @@ class ProgressHudState extends State<ProgressHud> {
 
   @override
   Widget build(BuildContext context) {
+    this._hasBuildAfterShow = true;
     return Directionality(
         textDirection: TextDirection.ltr,
         child: Stack(children: <Widget>[
