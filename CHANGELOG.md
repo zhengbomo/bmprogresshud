@@ -1,3 +1,7 @@
+## 1.0.1
+
+* make `of` method optional
+
 ## 1.0.0-nullsafety.2
 
 * sync 0.0.10
