@@ -32,7 +32,7 @@ class ProgressHud extends StatefulWidget {
   final bool isGlobalHud;
 
   static ProgressHudState? of(BuildContext context) {
-    return context.findAncestorStateOfType<ProgressHudState>()!;
+    return context.findAncestorStateOfType<ProgressHudState>();
   }
 
   ProgressHud(
