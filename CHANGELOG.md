@@ -1,3 +1,7 @@
+## 1.0.2
+
+* fix null check bug
+
 ## 1.0.1
 
 * make `of` method optional
