@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+
 import 'package:bmprogresshud/bmprogresshud.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,13 +10,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProgressHud(
       isGlobalHud: true,
-      child: MaterialApp(
-        home: HomePage()
-      ),
+      child: MaterialApp(home: HomePage()),
     );
   }
 }
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,6 +22,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   GlobalKey<ProgressHudState> _hudKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,6 +46,12 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    _showToast(context);
+                  },
+                  child: Text("show toast"),
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     _showSuccessHud(context);
                   },
                   child: Text("show success"),
@@ -63,9 +68,7 @@ class _HomePageState extends State<HomePage> {
                   },
                   child: Text("show progress"),
                 ),
-
                 Divider(height: 50),
-
                 ElevatedButton(
                   onPressed: () async {
                     ProgressHud.showLoading();
@@ -76,13 +79,15 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    ProgressHud.showAndDismiss(ProgressHudType.success, "load success");
+                    ProgressHud.showAndDismiss(
+                        ProgressHudType.success, "load success");
                   },
                   child: Text("show global success"),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    ProgressHud.showAndDismiss(ProgressHudType.error, "load fail");
+                    ProgressHud.showAndDismiss(
+                        ProgressHudType.error, "load fail");
                   },
                   child: Text("show global error"),
                 ),
@@ -101,30 +106,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   _showLoadingHud(BuildContext context) async {
-    ProgressHud.of(context).show(ProgressHudType.loading, "loading...");
+    ProgressHud.of(context)?.show(ProgressHudType.loading, "loading...");
     await Future.delayed(const Duration(seconds: 1));
     _hudKey.currentState?.dismiss();
   }
 
+  _showToast(BuildContext context) async {
+    ProgressHud.of(context)?.showToast(text: "${DateTime.now()}");
+  }
+
   _showSuccessHud(BuildContext context) {
-    ProgressHud.of(context).showAndDismiss(ProgressHudType.success, "load success");
+    ProgressHud.of(context)
+        ?.showAndDismiss(ProgressHudType.success, "load success");
   }
 
   _showErrorHud(BuildContext context) {
-    ProgressHud.of(context).showAndDismiss(ProgressHudType.error, "load fail");
+    ProgressHud.of(context)?.showAndDismiss(ProgressHudType.error, "load fail");
   }
 
   _showProgressHud(BuildContext context) {
     var hud = ProgressHud.of(context);
-    hud.show(ProgressHudType.progress, "loading");
+    hud?.show(ProgressHudType.progress, "loading");
 
     double current = 0;
     Timer.periodic(Duration(milliseconds: 1000.0 ~/ 60), (timer) {
       current += 1;
       var progress = current / 100;
-      hud.updateProgress(progress, "loading $current%");
+      hud?.updateProgress(progress, "loading $current%");
       if (progress == 1) {
-        hud.showAndDismiss(ProgressHudType.success, "load success");
+        hud?.showAndDismiss(ProgressHudType.success, "load success");
         timer.cancel();
       }
     });
