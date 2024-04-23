@@ -1,3 +1,7 @@
+## 1.0.3
+
+* add toast feature
+
 ## 1.0.2
 
 * fix null check bug

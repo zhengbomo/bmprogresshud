@@ -4,6 +4,13 @@
 
 A lightweight progress HUD for your Flutter app, Inspired by [SVProgressHUD](https://github.com/SVProgressHUD/SVProgressHUD).
 
+## Feature
+
+* Loading HUD
+* Success/Failure HUD
+* Progress HUD
+* Toast
+
 ## Showcase
 
 ![demo演示](https://github.com/zhengbomo/bmprogresshud/blob/master/images/demo.gif?raw=true)
@@ -35,6 +42,12 @@ class HomePage extends StatelessWidget {
                     _showLoadingHud(context);
                   },
                   child: Text("show loading"),
+                ),
+                RaisedButton(
+                  onPressed: () {
+                    ProgressHud.of(context)?.showToast(text: "load success");
+                  },
+                  child: Text("show toast"),
                 ),
               ],
             );

@@ -72,6 +72,11 @@ class ProgressHud extends StatefulWidget {
     return _globalHud?.showSuccessAndDismiss(text: text);
   }
 
+  /// show toast text and dismiss automatic
+  static Future showToast({required String text}) async {
+    return _globalHud?.showToast(text: text);
+  }
+
   /// show error icon with text and dismiss automatic
   static Future showErrorAndDismiss({required String text}) async {
     return _globalHud?.showErrorAndDismiss(text: text);
